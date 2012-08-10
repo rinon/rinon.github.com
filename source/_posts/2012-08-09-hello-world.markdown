@@ -4,7 +4,6 @@ title: "Hello World"
 date: 2012-08-09 18:34
 comments: true
 categories: 
-published: false
 ---
 
 Test Post
