@@ -16,11 +16,9 @@ article{
 	}
 	.entry-content{
 		line-height: 2;
-		text-align: justify;
+		/* text-align: justify; */
 		a{
-			&:hover{
-				text-decoration: underline;
-			}
+			text-decoration: underline;
 		}
 		.more-link{
 			display: block;
@@ -82,7 +80,7 @@ article{
 			border: none;
 		}
 		table{
-			background: $color-gray04;
+			background: $color-base03;
 			border: 1px solid $color-gray03;
 			border-spacing: 0;
 			margin-top: 10px;

@@ -18,7 +18,7 @@
 			width: auto;
 		}
 		a{
-			@include link-colors($color-gray02, $color-gray01);
+			@include link-colors($color-base01, $color-orange);
 			@include transition(0.3s);
 		}
 		.date, .tags, .comments{
