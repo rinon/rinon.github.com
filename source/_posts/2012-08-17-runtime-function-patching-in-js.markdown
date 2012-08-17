@@ -3,7 +3,7 @@ layout: post
 title: "Runtime function patching in JS"
 date: 2012-08-17 15:00
 comments: true
-categories: 
+categories: JavaScript
 ---
 
 Have you ever needed to create a stub function which patched itself
