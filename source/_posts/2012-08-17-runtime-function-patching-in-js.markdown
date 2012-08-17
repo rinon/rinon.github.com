@@ -62,8 +62,8 @@ function foo() {
 {% endcodeblock %}
 
 Note: We can do an analogous rewrite to anonymous functions assigned
-to variables. Awesome, we just need to define `loadFunction` and we're done,
-right?  Shouldn't be too hard... Let's give it a try:
+to variables. Awesome, we just need to define `loadFunction` and we're
+done, right? Shouldn't be too hard... Let's give it a try:
 
 {% codeblock lang:javascript %}
 function loadFunction(fnStr) {
@@ -80,21 +80,28 @@ parens so it can be parsed as a StatementExpression! Ok, fine:
 var fooStr = "(function() {console.log('Hello, world!');})";
 {% endcodeblock %}
 
-Awesome, it works! Ok, we're done now, right?
+Awesome, it works now!
+
+One thing to note here -- `loadFunction` needs to be in the same frame
+(function scope) as the original function so that the function created
+with `eval` closes over the same variables as the original function
+would have. This means that nested functions will need a different
+`loadFunction` at each nesting level containing a rewritten function
+so the `eval` occurs in the correct scope.
 
 ### Patching references
 
-Not so fast... What if some other part of the code took a reference to
-`foo` before it executed? Something simple like `var fooAlias = foo;`
-would do this.  Now, `fooAlias` will get a reference to the stub, and
-every time `fooAlias` was called, the function would have to be
-recreated. This is, of course, horribly bad for performance! While we
-can't replace references to the stub, we can make the stub into a
-simple trampoline that stores the loaded function and jumps to it if
-available. Although there are probably other ways to do this, I chose
-to set the function string variable (`fooStr` in this case) to null,
-and check to make sure it was a valid string before the `eval`. With
-this change, the code now looks like:
+Now, we're not done yet... What if some other part of the code took a
+reference to `foo` before it executed? Something simple like `var
+fooAlias = foo;` would do this.  Now, `fooAlias` will get a reference
+to the stub, and every time `fooAlias` was called, the function would
+have to be recreated. This is, of course, horribly bad for
+performance! While we can't replace references to the stub, we can
+make the stub into a simple trampoline that stores the loaded function
+and jumps to it if available. Although there are probably other ways
+to do this, I chose to set the function string variable (`fooStr` in
+this case) to null, and check to make sure it was a valid string
+before the `eval`. With this change, the code now looks like:
 
 {% codeblock lang:javascript %}
 function loadFunction(fnStr, fn) {
