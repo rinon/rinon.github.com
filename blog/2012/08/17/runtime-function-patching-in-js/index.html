@@ -3,11 +3,12 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>Ingenious Coding</title>
+	<title>Runtime function patching in JS - Ingenious Coding</title>
 	<meta name="author" content="Stephen Crane">
 
 	
-	<meta name="description" content="&#8220;What&#8217;s your favorite editor?&#8221; This question is almost bound to start a fight amongst even the most amiable of coders. Nothing &hellip;">
+	<meta name="description" content="Have you ever needed to create a stub function which patched itself
+with the real function at runtime? As part of some research I&#8217;ve been &hellip;">
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -78,178 +79,9 @@
 	
 		
 	
-	<div id="content" class="inner">
-
-
-    <article class="post">
-	<h1 class="title"><a href="/blog/2013/02/22/on-editors/">On Editors</a></h1>
-	<div class="entry-content">
-		<p>&#8220;What&#8217;s your favorite editor?&#8221; This question is almost bound to start a fight amongst even the most amiable of coders. <em>Nothing</em> boils programmer blood as much as an argument over dev tools. Of course, that never stops anyone from asking, and I&#8217;ve frequently debated the virtues of all sorts of programming tools, including of course the one true editor, Emacs.</p>
-
-<p>Now, before you write me off as just another of those wacko Emacs users, hear me out. As much as I love Emacs, I firmly believe that every need deserves a careful look at which tool is best. For example, I am currently writing this post with a new tool I&#8217;m trying out, IA Writer, rather than my usual Emacs. I&#8217;ll give a run-down of a few of the tools I use, and the needs they fulfill, and hopefully this will help you out in your journey to find the best tools for the job.</p>
-
-<p>First, a bit of background: I&#8217;ve used a multitude of editors and environments, from QBasic in Windows 3.1 to Visual Studio. I&#8217;ve ran Windows, Linux, and OS X as my daily work OS at various times. Now with that said, I don&#8217;t claim to be un-biased regarding programming tools. I am very partial to open source software, and will always choose the open source alternative if it is good enough for my needs.</p>
-
-<p>What exactly are my needs? I write code on a daily basis, in a variety of languages. Lately, for example, I&#8217;ve needed to write C/C++, Java, Python, JavaScript, Latex, shell scripts, C#, PHP, and scrape together some HTML and CSS. My preference would naturally be to learn one tool that I can use for all these languages. I want to work as quickly and efficiently as possible, which means I need very useable tools. For me usability requires a simple, clean, keyboard-driven interface. I prefer to touch my mouse as little as possible while working, since the mouse disturbs my flow of work and is infinitely slower than a few quick key presses. Finally, for bonus points, I&#8217;d like my tools to be cross-platform since I switch back and forth on various machines and would like a somewhat consistent interface. So, this adds up to lots of languages, keyboard-friendly, and hopefully cross-platform.</p>
-
-<p>These requirements leave me few choices for a primary editor: Kate (and similar basic text editors), Emacs, Vim, Eclipse, Netbeans, and Visual Studio. Visual Studio immediately fails my requirements, since it only excels for a small subset of the languages I use. However, I must admit that VS is easily the best tool I&#8217;ve found if you are primarily working in C# (sorry Mono…). I&#8217;m not a big fan of heavy IDE&#8217;s such as Eclipse and Netbeans, since they tend to be a bit slow for me. In addition, both tend to focus primarily on Java, which I use as rarely as possible out of personal preference. This leaves a choice of either a basic text editor such as Kate or Notepad++, or something more complex, such as Emacs or Vim. I used Kate for a long time as my primary editor, but I never looked back after eventually switching to Emacs. I also used Vim for about two years, but found that my brain didn&#8217;t work well with modal editing. Additionally, I was annoyed by the necessity to heavily customize Vim to make it useable for the way I work. I won&#8217;t dwell too much on comparing Emacs to other editors, however I hope you can make your own comparison from the features I highlight.</p>
-
-<h2>Starting out with Emacs</h2>
-
-<p>Now I&#8217;ve heard many complaints about the usability of Emacs, but most of this seems to stem from the complexity of shortcuts. First of all, you <em>must</em> use Caps Lock as your Control key to make any sense of Emacs. There&#8217;s just no way around it, since Control is so crucial and yet so far away on modern keyboard layouts. Second, most of the important keybinds fit on the front and back of a standard letter size paper. Print out the Emacs quick reference, stick it next to your keyboard, and you&#8217;ll quickly learn all the everyday shortcuts.</p>
-
-<p>Unless otherwise noted, all code snippets should be placed in your <code>~/.emacs</code> file. For installing packages I try to use <a href="http://emacswiki.org/emacs/ELPA">ELPA</a>. Starting in the latest version (24), Emacs <em>finally</em> has built-in package installation support. This makes installing packages a breeze: <code>meta-x package-list-packages</code>, move the cursor to a package you want, hit <code>i</code> to mark for installation, then <code>x</code> to install. Done! ELPA can keep your packages up-to-date, and has a wide selection of common packages. I use the following config for access to all the usual repositories:</p>
-
-<figure class='code'><figcaption><span>.emacs  </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='cl'><span class='line'><span class="p">(</span><span class="k">setq</span> <span class="nv">package-archives</span> <span class="o">&#39;</span><span class="p">((</span><span class="s">&quot;gnu&quot;</span> <span class="o">.</span> <span class="s">&quot;http://elpa.gnu.org/packages/&quot;</span><span class="p">)</span>
-</span><span class='line'>                         <span class="p">(</span><span class="s">&quot;marmalade&quot;</span> <span class="o">.</span> <span class="s">&quot;http://marmalade-repo.org/packages/&quot;</span><span class="p">)</span>
-</span><span class='line'>                         <span class="p">(</span><span class="s">&quot;melpa&quot;</span> <span class="o">.</span> <span class="s">&quot;http://melpa.milkbox.net/packages/&quot;</span><span class="p">)))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>How I use Emacs</h2>
-
-<p>To give you a feel for how powerful Emacs is, I&#8217;ll describe a few of my favorite tricks and features, such as navigation, LaTeX integration, and gdb integration.</p>
-
-<h3>Favorite Tricks</h3>
-
-<p>I have a few favorite Emacs tricks and commands that I find terribly useful for what I need, and you might too.</p>
-
-<p>I absolutely love <a href="http://orgmode.org/">org-mode</a>, but I think I would need to take an entire blog post to really do it justice. For now, I shall simply say that it is the simplest, greatest, all-around note-taking and organization software around. I know people who use Emacs solely for org-mode. It&#8217;s that good.</p>
-
-<p><a href="http://www.gnu.org/software/emacs/manual/html_node/emacs/Editing-Binary-Files.html">Hexl-mode</a> is a fairly nice builtin, although not very feature-complete, hex-viewer. It works great for quickly viewing some binary data, but isn&#8217;t quite enough if you plan to do a lot of hex hacking.</p>
-
-<p>While not really a trick, I love the way that Emacs handles indentation. Emacs always &#8220;does the right thing&#8221; after you set up your indent style, such as with this config:</p>
-
-<figure class='code'><figcaption><span>.emacs  </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='cl'><span class='line'><span class="p">(</span><span class="k">setq</span> <span class="nv">c-default-style</span> <span class="s">&quot;k&amp;r&quot;</span>
-</span><span class='line'>      <span class="nv">c-basic-offset</span> <span class="mi">2</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="k">setq</span> <span class="nv">default-tab-width</span> <span class="mi">2</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Hitting tab always indents the current line to the right position, regardless of where it started. This is great for making all of your indentation consistently perfect. If you need to re-indent a section, just select the section and hit <code>meta-\</code> to fix all the indentation in that section. While I&#8217;ve found most modes do a great job of auto-indentation, unfortunately the js2-mode and HTML modes tend to fall short. However, on the whole, I much prefer this single tab to indent style rather than forcing the programmer to think about how many times to hit tab.</p>
-
-<h3>How to get around</h3>
-
-<p>I like having a lot of buffers (files) open at once. In fact I&#8217;m guilty of this in general &#8211; my browser usually has at least 150 tabs open. Fortunately, Emacs makes this super easy. First, I need it to remember all my open files between sessions:</p>
-
-<figure class='code'><figcaption><span>.emacs  </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='cl'><span class='line'><span class="p">(</span><span class="nv">desktop-save-mode</span> <span class="mi">1</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>For a long time I simply used <code>ctrl-x b</code> to switch buffers. By default, this buffer switch does a few helpful things. The default buffer is the most recently used buffer, which is helpful for flipping back and forth between a few files, and older buffers are quickly accessibly via the up arrow. However, I found that <a href="http://emacswiki.org/emacs/InteractivelyDoThings">IDO</a> makes switching buffers and opening files <em>much</em> easier. IDO is an unobtrusive plugin which completes buffer and filenames as you type, generally in a natural manner. IDO is built in to recent versions of Emacs and is enabled with:</p>
-
-<figure class='code'><figcaption><span>.emacs  </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='cl'><span class='line'><span class="p">(</span><span class="nb">require</span> <span class="ss">&#39;ido</span><span class="p">)</span>
-</span><span class='line'><span class="p">(</span><span class="nv">ido-mode</span> <span class="no">t</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I tend to use the following options for extra goodness:</p>
-
-<figure class='code'><figcaption><span>.emacs  </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='cl'><span class='line'><span class="p">(</span><span class="nv">ido-everywhere</span> <span class="no">t</span><span class="p">)</span>
-</span><span class='line'><span class="p">(</span><span class="k">setq</span> <span class="nv">ido-enable-flex-matching</span> <span class="no">t</span><span class="p">)</span>
-</span><span class='line'><span class="p">(</span><span class="k">setq</span> <span class="nv">ido-create-new-buffer</span> <span class="ss">&#39;always</span><span class="p">)</span>
-</span><span class='line'><span class="p">(</span><span class="k">setq</span> <span class="nv">ido-enable-tramp-completion</span> <span class="no">nil</span><span class="p">)</span>
-</span><span class='line'><span class="p">(</span><span class="k">setq</span> <span class="nv">ido-confirm-unique-completion</span> <span class="no">nil</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Modes</h3>
-
-<p>As a grad student now, I tend to write a lot of stuff in LaTeX, so I need a good editing environment for that. Along with almost every other Emacs user, my mode of choice is <a href="http://www.gnu.org/software/auctex/">AUCTeX</a>, but I augment this with a few additions. First of all, I use the following settings for AUCTeX:</p>
-
-<figure class='code'><figcaption><span>.emacs  </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='cl'><span class='line'><span class="p">(</span><span class="k">setq</span> <span class="nv">TeX-PDF-mode</span> <span class="no">t</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;LaTeX-mode-hook</span> <span class="ss">&#39;visual-line-mode</span><span class="p">)</span>
-</span><span class='line'><span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;LaTeX-mode-hook</span> <span class="ss">&#39;speck-mode</span><span class="p">)</span>
-</span><span class='line'><span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;LaTeX-mode-hook</span> <span class="ss">&#39;LaTeX-math-mode</span><span class="p">)</span>
-</span><span class='line'><span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;LaTeX-mode-hook</span> <span class="ss">&#39;writegood-mode</span><span class="p">)</span>
-</span><span class='line'><span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;TeX-mode-hook</span> <span class="ss">&#39;zotelo-minor-mode</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;LaTeX-mode-hook</span> <span class="ss">&#39;turn-on-reftex</span><span class="p">)</span>
-</span><span class='line'><span class="p">(</span><span class="k">setq</span> <span class="nv">reftex-plug-into-AUCTeX</span> <span class="no">t</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>These settings set the default output to PDF, turn on visual line mode (line navigation respects soft-wraps), turn on <a href="http://www.emacswiki.org/SpeckMode">speck</a> mode for spell checking (an alternative to <a href="http://www.emacswiki.org/emacs/FlySpell">flyspell</a>, which is also great), turn on math mode for LaTeX since I write a lot of math, and turn on reftex and <a href="https://github.com/vitoshka/zotelo">integration with Zotero</a>, my reference manager. I won&#8217;t go into a lot of detail on these, since the manuals for each tool tend to be fairly good.</p>
-
-<p>I have found that <a href="https://github.com/bnbeckwith/writegood-mode">writegood-mode</a> is great for keeping my writing clean and straightforward when I&#8217;m writing papers. It simply marks common errors such as repeated words, as well as uses of the passive voice, and weak or overused words. Try it out, and see what you think!</p>
-
-<p>I use the usual modes for editing various sources, such as js2-mode, python-mode, etc. for syntax highlighting and other goodness. These modes are all available from ELPA, and a quick google or check of the Emacs wiki should point you in the right direction.</p>
-
-<h3>GDB</h3>
-
-<p>The gdb integration in Emacs is so useful it deserves a section of its own. To fire up gdb in emacs, simply use <code>meta-x gdb</code>. This will prompt you for a command to run gdb with, defaulting to the current executable if your working directory is simple enough to figure this out. You can use any of the usual gdb options here, but make sure that you keep the <code>-i=mi</code> bit at the beginning &#8211; this allows Emacs to integrate gdb nicely into its interface.</p>
-
-<p>The best way to use gdb, assuming you have enough screen space, is the many-windows mode. Simply hit <code>meta-x gdb-many-windows</code> after starting a gdb session, and Voilà, you have a gdb prompt, current source file, local vars, breakpoints, etc. Breakpoints can be set in open source files simply by navigating to the line you want to break on and hitting <code>ctrl-x SPACE</code>. Breakpoints are disabled simply by finding the breakpoint in the breakpoints buffer and hitting <code>D</code> on it. Hitting spacebar on a breakpoint disables it. You can also do lots more fun things with gdb, such as open buffers for live memory dumps or disassembly views. Check out the manual for more details.</p>
-
-<h2>Now go forth and conquer</h2>
-
-<p>I keep my configs in git, which allows me to easily branch for any new machine or platform I&#8217;m running on. Check out my exact configs on <a href="http://github.com/rinon/configs">github</a> and let me know if you have any suggestions or comments!</p>
-
-<p>I hope this post is useful to some, and that others would have great ideas that I can incorporate into my editing workflow. Please comment or contact me (links in the header) if you have any suggestions or comments!</p>
-
-		
-		
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-02-22T14:17:00-08:00" pubdate data-updated="true">Feb 22<span>nd</span>, 2013</time></div>
-	<div class="tags">
-
-</div>
-	
-</div></article>
-
-
-    <article class="post">
-	<h1 class="title"><a href="/blog/2012/08/17/runtime-function-patching-in-js/">Runtime Function Patching in JS</a></h1>
-	<div class="entry-content">
-		<p>Have you ever needed to create a stub function which patched itself
+	<div id="content" class="inner"><article class="post">
+	<h1 class="title">Runtime Function Patching in JS</h1>
+	<div class="entry-content"><p>Have you ever needed to create a stub function which patched itself
 with the real function at runtime? As part of some research I&#8217;ve been
 working on lately, I found that I needed to do exactly this. Just to
 make things more challenging this needed to be automated for <em>any</em>
@@ -784,10 +616,7 @@ function:</p>
 
 <p>This covers every edge case that I could think of, and should work to
 patch a function at runtime (as well as possible).</p>
-
-		
-		
-	</div>
+</div>
 
 
 <div class="meta">
@@ -814,170 +643,26 @@ patch a function at runtime (as well as possible).</p>
 	
 </div></article>
 
-
-    <article class="post">
-	<h1 class="title"><a href="/blog/2012/08/10/low-level-javascript/">Low-Level JavaScript</a></h1>
-	<div class="entry-content">
-		<p>This summer I&#8217;m taking a short break from grad school and working as a
-research intern at Mozilla. Awesome experience so far, and it&#8217;s great
-to be back to working on open source projects! I don&#8217;t think I&#8217;ve ever
-cloned so many github repos in such a short time.</p>
-
-<p>Ever wanted to have manual memory allocation in JavaScript? How about
-types? One of the projects that I&#8217;m helping out with is
-<a href="http://lljs.org">LLJS</a>, a typed dialect of JavaScript which resembles
-C/C++. It features manual memory allocation when you want it,
-co-existing alongside JavaScript&#8217;s normal garbage-collected object
-system. The goal here is to allow programmers to write fast JS code
-with a familiar syntax. Definitely be sure to check out the
-interactive demos to see examples of LLJS in action.</p>
-
-<h3>What&#8217;s new with LLJS?</h3>
-
-<p>We recently added arrays, with both statically stack-allocated and
-dynamically heap-allocated variants. These resemble C and C++ array
-syntax, respectively. I also added <code>union</code> types, to complement our
-existing <code>struct</code> types. These behave precisely as you would expect
-from C. Recently I added syntax for defining structs and unions inside
-other structs or unions, which significantly simplifies writings
-structs.</p>
-
-<p>I also worked on optimizing our malloc implementation, which is much
-faster now. We use a naive malloc algorithm from the K&amp;R book, but
-since we don&#8217;t actually need to worry about paging, I modified this so
-that all memory is on a single page. This cut out function calls for
-allocating new pages, speeding allocation up quite a bit.</p>
-
-<p>My mentor here at Mozilla, Michael Bebenita, added functions and
-optional constructors to structs, which are beginning to look a lot
-like C++ structs rather than C structs.</p>
-
-<p>Finally, perhaps the most exciting new thing in LLJS is
-<a href="http://disnetdev.com/blog/2012/07/18/memory-checking-in-low-level-javascript/">memory checking</a>!
-Tim Disney, another intern here at Mozilla, implemented Valgrind style
-memory checking for LLJS. It can currently detect the most common
-memory errors: use after free, uninitialized reads, double frees, and
-memory leaks.</p>
-
-<h3>Esprima in LLJS</h3>
-
-<p>As part of another project, I needed super fast JS parsing in
-JS. Since I was already working with LLJS, I figured I might as well
-try it out on a larger scale and see if I couldn&#8217;t get
-<a href="http://esprima.org/">Esprima</a> ported over to LLJS and using structs
-for the generated AST. I hoped this would make an already fast parser
-even faster and leaner by using manual memory allocation.</p>
-
-<p>Well, over 4000 lines of LLJS later, I finished the port. String
-handling is somewhat inefficient (it creates a new C string for every
-string in the program), but it works! Check out the sources on
-<a href="http://github.com/rinon/esprima-lljs">github</a> if you&#8217;re interested.</p>
-
-<p>So, was it faster? Well&#8230; not really. As it turns out, modern JS
-engines are very good at allocating objects, so manual allocation does
-not appear to be faster than the engine object allocation. The LLJS
-version does use about %10 less memory when parsing large JS sources,
-so that&#8217;s a win. From some preliminary testing, traversing the AST
-appears to be faster with LLJS, since property access is fast, but
-this comes at the cost of making traversal code harder to write.</p>
-
-<p>Where I think we can definitely win, though, is code which allocates
-and frees code very often. Manual memory reuse and freeing could
-provide speedups here over engine garbage collection for some
-applications (note: I have yet to test this&#8230;).</p>
-
-<h3>What&#8217;s next?</h3>
-
-<p>In the beginning of the summer I started off adding source map support
-to LLJS, so that debug tools in the browser will show the
-corresponding LLJS sources instead of the compiled JS sources. This is
-mostly implemented in
-<a href="http://github.com/Constellation/escodegen/">escodegen</a>, which we use
-to generate the JS code from a rewritten AST. This got a little bogged
-down due to a bug in the chrome devtools
-(<a href="http://code.google.com/p/chromium/issues/detail?id=133854">not loading sources from a data URI source-map</a>),
-so I haven&#8217;t finished it off yet. Pretty much all that&#8217;s left to do is
-testing there, though.</p>
-
-<p>As far as language features go, I will definitely be adding support
-for <code>enum</code> types as soon as I get the chance. We are also looking at
-implementing <a href="https://github.com/mbebenita/LLJS/issues/12">bit fields</a>
-as a convenience for bit packing in structs.</p>
-
-<p>If you have more ideas for where LLJS should head, please start an
-issue on github or (even better) toss us a pull request. Most
-importantly though, go try it out! If you find it helpful (or
-frustrating), let us know.</p>
-
-		
-		
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-08-10T11:14:00-07:00" pubdate data-updated="true">Aug 10<span>th</span>, 2012</time></div>
-	<div class="tags">
-
-
-	<a class='category' href='/blog/categories/javascript/'>JavaScript</a>
-
-
-</div>
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
 	
-</div></article>
-
-
-    <article class="post">
-	<h1 class="title"><a href="/blog/2012/08/09/hello-world/">Hello World</a></h1>
-	<div class="entry-content">
-		<h2>Test Post</h2>
-
-<p>Just a test post to get things started. Not sure how often I&#8217;ll be
-posting here, but I wanted someplace to write up a few of the things
-I&#8217;m working on. More content will be coming soon!</p>
-
-		
-		
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-08-09T18:34:00-07:00" pubdate data-updated="true">Aug 9<span>th</span>, 2012</time></div>
-	<div class="tags">
-
-</div>
 	
-</div></article>
+	<a class="addthis_button_tweet"></a>
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
 
-<nav id="pagenavi">
-    
-    
-    <div class="center"><a href="/blog/archives">Blog Archives</a></div>
-</nav></div>
+
+
+<section id="comment">
+    <h1 class="title">Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
 	<footer id="footer" class="inner">Copyright &copy; 2013
 
     Stephen Crane
@@ -996,7 +681,10 @@ I&#8217;m working on. More content will be coming soon!</p>
       var disqus_shortname = 'ingeniouscoding';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://ingeniouscoding.com/blog/2012/08/17/runtime-function-patching-in-js/';
+        var disqus_url = 'http://ingeniouscoding.com/blog/2012/08/17/runtime-function-patching-in-js/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
